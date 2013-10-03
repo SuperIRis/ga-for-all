@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+       <a href="http://twitter.com/element" class="ga-track" data-ga="element">Element Studios</a>
+       <input type="button" value="Ir al Facebook de Element" class="ga-track" data-ga="facebook-element" />
+       <div class="ga-track" data-ga="Gato" class="ga-track"><img src="http://placekitten.com/g/200/300" /></div>
+
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-XXXX-Y');
+        ga('send', 'pageview');
+
+        //GA TRACKER
+        //trackear todos los elementos con la clase "ga-track" utilizando el término dentro de "data-ga" (Ejemplo: <a href="http://twitter.com/element" class="ga-track" data-ga="element">Element Studios</a>, se reflejará en el analytics como un click a "Element")
+        (function () {
+            //polyfill para getElementsByClassName en IE8
+            function getElementsByClassName(node, classname) {
+                //usar función nativa si existe
+                if (node.getElementsByClassName) {
+                    return node.getElementsByClassName(classname);
+                } 
+                else {
+                    return (function getElementsByClass(searchClass, node) {
+                        if ( node == null ){
+                            node = document; 
+                        }
+                        var classElements = [],
+                            els = node.getElementsByTagName("*"),
+                            elsLen = els.length,
+                            pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)"), i, j;
+
+                        for (i = 0, j = 0; i < elsLen; i++) {
+                          if ( pattern.test(els[i].className) ) {
+                              classElements[j] = els[i];
+                              j++;
+                          }
+                        }
+                        return classElements;
+                    })(classname, node);
+                    }
+                }
+            //buscando todos los elementos con clase "ga-track"
+            var elements = getElementsByClassName(document, 'ga-track');
+            for(var i = 0, len = elements.length; i < len; i++) {
+                elements[i].onclick = gaTrack;
+            }
+            //función que se ejecuta en cada click
+            function gaTrack(e){
+                if (typeof(ga) != "undefined" && e.currentTarget.getAttribute("data-ga").length>1){
+                    //trackeo de evento
+                    ga('send', 'event', 'link', 'click',  e.currentTarget.getAttribute("data-ga"));
+                }
+              }
+        })();
+        
+
+    </script>
+    <!-- End Google Analytics -->
+    </body>
+</html>
